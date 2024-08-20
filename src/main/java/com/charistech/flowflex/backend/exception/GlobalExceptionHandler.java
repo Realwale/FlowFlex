@@ -19,6 +19,13 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleResourceAlreadyExistsException(Exception e){
+        return buildErrorResponse(new ExceptionResponse(HttpStatus.ALREADY_REPORTED,
+                e.getMessage(), HttpStatus.ALREADY_REPORTED.value()));
+    }
+
+
     private ResponseEntity<ExceptionResponse> buildErrorResponse(ExceptionResponse apiErrorResponse){
         return new ResponseEntity<>(apiErrorResponse, apiErrorResponse.getStatus());
 
