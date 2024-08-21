@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidArgumentException(Exception e){
+        return buildErrorResponse(new ExceptionResponse(HttpStatus.BAD_REQUEST,
+                e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+
     private ResponseEntity<ExceptionResponse> buildErrorResponse(ExceptionResponse apiErrorResponse){
         return new ResponseEntity<>(apiErrorResponse, apiErrorResponse.getStatus());
 
