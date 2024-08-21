@@ -20,6 +20,4 @@ public class MailConstants {
     @Value("${spring.mail.password}")
     private String mailPassword;
 
-    @Value("${app.admin.email}")
-    private String adMail;
 }
