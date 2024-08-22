@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +31,10 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private int failedLoginAttempts;
+
+    private LocalDateTime lockTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,5 +69,28 @@ public class AppUser extends BaseEntity implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public boolean isAccountLocked() {
+        if (lockTime == null) {
+            return false;
+        }
+        return lockTime.isAfter(LocalDateTime.now());
+    }
+
+    public void increaseFailedAttempts() {
+        this.failedLoginAttempts++;
+    }
+
+    public void resetFailedAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public void lockAccount(int min) {
+        this.lockTime = LocalDateTime.now().plusMinutes(min);
+    }
+
+    public void unlockAccount() {
+        this.lockTime = null;
     }
 }
