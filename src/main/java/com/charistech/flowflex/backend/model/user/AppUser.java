@@ -27,6 +27,7 @@ public class AppUser extends BaseEntity implements UserDetails {
     private String email;
     private String phone;
     private String password;
+    private String department;
     private boolean isVerified;
 
     @Enumerated(EnumType.STRING)

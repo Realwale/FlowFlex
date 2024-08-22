@@ -1,10 +1,13 @@
 package com.charistech.flowflex.backend.service.auth;
 
+import com.charistech.flowflex.backend.data.request.SignUpReq;
 import com.charistech.flowflex.backend.data.response.APIResponse;
 import com.charistech.flowflex.backend.model.user.AppUser;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthService {
+
+    APIResponse createAccount(SignUpReq signUpReq);
 
     void saveEmailConfirmToken(AppUser user);
 

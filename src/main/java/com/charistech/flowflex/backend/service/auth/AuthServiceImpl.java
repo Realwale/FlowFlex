@@ -2,6 +2,7 @@ package com.charistech.flowflex.backend.service.auth;
 
 
 import com.charistech.flowflex.backend.constant.EventType;
+import com.charistech.flowflex.backend.data.request.SignUpReq;
 import com.charistech.flowflex.backend.data.response.APIResponse;
 import com.charistech.flowflex.backend.exception.InvalidArgumentException;
 import com.charistech.flowflex.backend.exception.ResourceAlreadyExistsException;
@@ -11,13 +12,13 @@ import com.charistech.flowflex.backend.model.token.JwtToken;
 import com.charistech.flowflex.backend.model.user.AppUser;
 import com.charistech.flowflex.backend.repository.AppUserRepository;
 import com.charistech.flowflex.backend.repository.TokenRepository;
-import com.charistech.flowflex.backend.security.JwtService;
 import com.charistech.flowflex.backend.utils.EmailUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -34,8 +35,34 @@ public class AuthServiceImpl implements AuthService{
     private final TokenRepository tokenRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final AppUserRepository userRepository;
+    private final PasswordEncoder encoder;
 
     private static final int EXPIRY_DATE = 60 * 24;
+
+
+    @Override
+    public APIResponse createAccount(SignUpReq signUpReq){
+        if(userRepository.existsByEmail(signUpReq.getEmail())){
+            throw new ResourceAlreadyExistsException("Account already exists with email "+signUpReq.getEmail());
+        }
+        AppUser appUser = AppUser.builder()
+                .firstName(signUpReq.getFirstName())
+                .lastName(signUpReq.getLastName())
+                .email(signUpReq.getEmail())
+                .phone(signUpReq.getPhoneNumber())
+                .password(encoder.encode(signUpReq.getPassword()))
+                .isVerified(false)
+                .build();
+        var saveUser = userRepository.save(appUser);
+        saveEmailConfirmToken(saveUser);
+        return APIResponse.builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .isSuccessful(true)
+                .responseMessage("Your registration is almost complete. " +
+                        "Please check your email for the confirmation link to finalize the process.")
+                .payLoad(saveUser.getFirstName() + saveUser.getLastName())
+                .build();
+    }
 
     @Override
     public void saveEmailConfirmToken(AppUser user) {
