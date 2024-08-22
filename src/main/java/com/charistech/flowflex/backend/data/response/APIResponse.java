@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder(value = {"isSuccessful","statusCode", "responseMessage", "time", "payLoad"})
-public class APIResponse <T>{
+public class APIResponse {
 
     private boolean isSuccessful;
     private int statusCode;
     private String responseMessage;
     private String time;
-    private T payLoad;
+    private Object payLoad;
 
 
-    public APIResponse(boolean isSuccessful, int statusCode, String responseMessage, T payLoad) {
+    public APIResponse(boolean isSuccessful, int statusCode, String responseMessage, Object payLoad) {
         this.isSuccessful = isSuccessful;
         this.statusCode = statusCode;
         this.responseMessage = responseMessage;
