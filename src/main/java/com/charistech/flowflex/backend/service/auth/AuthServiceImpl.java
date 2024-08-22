@@ -2,6 +2,7 @@ package com.charistech.flowflex.backend.service.auth;
 
 
 import com.charistech.flowflex.backend.constant.EventType;
+import com.charistech.flowflex.backend.data.request.LoginRequest;
 import com.charistech.flowflex.backend.data.request.SignUpReq;
 import com.charistech.flowflex.backend.data.response.APIResponse;
 import com.charistech.flowflex.backend.exception.InvalidArgumentException;
@@ -12,20 +13,21 @@ import com.charistech.flowflex.backend.model.token.JwtToken;
 import com.charistech.flowflex.backend.model.user.AppUser;
 import com.charistech.flowflex.backend.repository.AppUserRepository;
 import com.charistech.flowflex.backend.repository.TokenRepository;
+import com.charistech.flowflex.backend.security.JwtService;
 import com.charistech.flowflex.backend.utils.EmailUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,8 @@ public class AuthServiceImpl implements AuthService{
     private final ApplicationEventPublisher eventPublisher;
     private final AppUserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     private static final int EXPIRY_DATE = 60 * 24;
 
@@ -60,7 +64,44 @@ public class AuthServiceImpl implements AuthService{
                 .isSuccessful(true)
                 .responseMessage("Your registration is almost complete. " +
                         "Please check your email for the confirmation link to finalize the process.")
-                .payLoad(saveUser.getFirstName() + saveUser.getLastName())
+                .payLoad(saveUser.getEmail())
+                .build();
+    }
+
+    @Override
+    public APIResponse authenticateLogin(LoginRequest request){
+        AppUser appUser = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(()-> new ResourceNotFoundException("No account found with the provided email provided "+ request.getEmail()));
+        if (!appUser.isVerified()){
+            throw new InvalidArgumentException("Account is not verified. " +
+                    "Please check your email to verify your account or request a new confirmation link.");
+        }
+        JwtToken checkToken = tokenRepository.findByUser(appUser);
+        if (checkToken != null){
+            tokenRepository.delete(checkToken);
+        }
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getEmail(), request.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String accessToken = jwtService.generateToken(appUser);
+        String refreshToken = jwtService.generateRefreshToken(appUser);
+
+        JwtToken jwtToken = JwtToken.builder()
+                .token(accessToken)
+                .refreshToken(refreshToken)
+                .expiryDate(calculateExpiryDate())
+                .isRevoked(false)
+                .isExpired(false)
+                .build();
+        tokenRepository.save(jwtToken);
+        HashMap<String, String> tokens = new HashMap<>();
+        tokens.put("Access-Token", accessToken);
+        tokens.put("Refresh-Token", refreshToken);
+        return APIResponse.builder()
+                .isSuccessful(true)
+                .statusCode(HttpStatus.OK.value())
+                .responseMessage("login successful")
+                .payLoad(tokens)
                 .build();
     }
 
