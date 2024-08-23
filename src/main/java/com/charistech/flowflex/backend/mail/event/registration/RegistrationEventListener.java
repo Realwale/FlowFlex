@@ -3,7 +3,6 @@ package com.charistech.flowflex.backend.mail.event.registration;
 
 import com.charistech.flowflex.backend.constant.EventType;
 import com.charistech.flowflex.backend.constant.MailConstants;
-import com.charistech.flowflex.backend.constant.UrlConstants;
 import com.charistech.flowflex.backend.mail.common.OnApplicationEvent;
 import com.charistech.flowflex.backend.mail.common.SendEmail;
 import com.charistech.flowflex.backend.utils.EmailUtils;
@@ -14,6 +13,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+
+import static com.charistech.flowflex.backend.constant.UrlConstants.BASE_URL;
 
 @Component
 @RequiredArgsConstructor
@@ -44,9 +45,9 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
 
         String subject = MailConstants.REGISTRATION_EMAIL_CONFIRMATION_SUBJECT;
         String urlVariableName = "confirmationEmailUrl";
-        String templateName = "registrationConfirmation";
+        String templateName = "accountConfirmationTemplate";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + UrlConstants.BASE_URL+ "/account/registration/verify?t=" +
+        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),
@@ -61,7 +62,7 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
         String urlVariableName = "inviteUserEmailUrl";
         String templateName = "inviteUserEmail";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + UrlConstants.BASE_URL+ "/account/registration/set-password?t=" +
+        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/set-password?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),
@@ -75,7 +76,7 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
         String urlVariableName = "newConfirmationEmailUrl";
         String templateName = "newConfirmationEmail";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + UrlConstants.BASE_URL+ "/account/registration/verify?t=" +
+        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),

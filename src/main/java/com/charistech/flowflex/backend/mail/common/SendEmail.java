@@ -32,7 +32,7 @@ public class SendEmail {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
-        helper.setFrom("support@flowflex.com", senderName);
+        helper.setFrom("info@flowflex.com", senderName);
         helper.setSubject(subject);
         helper.setTo(email);
         helper.setText(mailContent, true);

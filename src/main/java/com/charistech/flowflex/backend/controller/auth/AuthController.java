@@ -27,6 +27,7 @@ public class AuthController {
 
     @PostMapping("/verify")
     public ResponseEntity<APIResponse> verifyAccount(@RequestParam(value = "a-v-t") String token, HttpServletRequest request){
+        System.out.println(request.getServerName() +" "+ request.getServerPort());
         return new ResponseEntity<>(authService.confirmEmail(token, request), HttpStatus.OK);
     }
 

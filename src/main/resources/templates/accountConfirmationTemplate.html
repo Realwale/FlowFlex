@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ALM Registration Confirmation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #D3D3D3;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      padding: 10px;
+      text-align: center;
+      background-color: #000080;
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #0000FF;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>FlowFlex</h1>
+  </div>
+  <p>Hi <span th:text="${name}"></span>,</p>
+  <p>
+    Thank you for signing up with FlowFlex. We're thrilled to have you on board and can't wait to unlock the full potential together.
+    To complete the registration process and ensure the security of your account, please verify your email address by clicking the verification link below:
+  </p>
+  <a class="button" th:href="${confirmationEmailUrl}">Verify email</a>
+  <p>
+    By verifying your email, you will gain full access to all the features and services offered by FlowFlex. Please note that the link will expire after 1 hour.
+    If you didn't sign up with us, please disregard this email, and rest assured that your information remains secure.
+  </p>
+  <p>
+    If you encounter any issues or need assistance, our dedicated support team is here to help. Simply reach out to our support team at support@flowflex.com for prompt assistance.
+  </p>
+  <p>
+    Thank you for choosing FlowFlex. We look forward to providing you with a seamless and secure shopping experience!
+  </p>
+  <p>Best regards,</p>
+  <h2>The FlowFlex Team</h2>
+</div>
+</body>
+</html>

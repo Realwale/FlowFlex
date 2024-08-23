@@ -2,6 +2,7 @@ package com.charistech.flowflex.backend.service.auth;
 
 
 import com.charistech.flowflex.backend.constant.EventType;
+import com.charistech.flowflex.backend.constant.Role;
 import com.charistech.flowflex.backend.data.request.LoginRequest;
 import com.charistech.flowflex.backend.data.request.SignUpReq;
 import com.charistech.flowflex.backend.data.response.APIResponse;
@@ -56,6 +57,8 @@ public class AuthServiceImpl implements AuthService{
                 .phone(signUpReq.getPhoneNumber())
                 .password(encoder.encode(signUpReq.getPassword()))
                 .isVerified(false)
+                .role(Role.ADMIN)
+                .department(signUpReq.getDepartment())
                 .build();
         var saveUser = userRepository.save(appUser);
         saveEmailConfirmToken(saveUser);
