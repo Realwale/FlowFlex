@@ -1,6 +1,8 @@
 package com.charistech.flowflex.backend.model.workflow;
 
 import com.charistech.flowflex.backend.common.BaseEntity;
+import com.charistech.flowflex.backend.constant.TaskStatus;
+import com.charistech.flowflex.backend.constant.WorkflowStatus;
 import com.charistech.flowflex.backend.model.task.Task;
 import com.charistech.flowflex.backend.model.user.AppUser;
 import jakarta.persistence.*;
@@ -21,7 +23,9 @@ public class Workflow extends BaseEntity {
 
     @Lob
     private String description;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private WorkflowStatus status;
 
     @Column(columnDefinition = "JSONB")
     private String workflowData;

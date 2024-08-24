@@ -1,6 +1,7 @@
 package com.charistech.flowflex.backend.model.task;
 
 import com.charistech.flowflex.backend.common.BaseEntity;
+import com.charistech.flowflex.backend.constant.TaskStatus;
 import com.charistech.flowflex.backend.model.user.AppUser;
 import com.charistech.flowflex.backend.model.workflow.Workflow;
 import jakarta.persistence.*;
@@ -30,4 +31,7 @@ public class Task extends BaseEntity {
 
     @Column(columnDefinition = "JSONB")
     private String taskData;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 }
