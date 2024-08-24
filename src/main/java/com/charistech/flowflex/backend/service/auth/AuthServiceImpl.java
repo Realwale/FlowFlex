@@ -63,8 +63,8 @@ public class AuthServiceImpl implements AuthService{
         var saveUser = userRepository.save(appUser);
         saveEmailConfirmToken(saveUser);
         return APIResponse.builder()
-                .statusCode(HttpStatus.CREATED.value())
                 .isSuccessful(true)
+                .statusCode(HttpStatus.CREATED.value())
                 .responseMessage("Your registration is almost complete. " +
                         "Please check your email for the confirmation link to finalize the process.")
                 .payLoad(saveUser.getEmail())

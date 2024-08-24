@@ -10,19 +10,13 @@ import java.util.Date;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @SequenceGenerator(name = "FLOWFLEX_TABLE_SEQUENCE", sequenceName = "FLOWFLEX_TABLE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FLOWFLEX_TABLE_SEQUENCE")
     private Long id;
-
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
-
-    @Column(name = "updated_by")
-    private String updatedBy;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,4 +27,28 @@ public class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_on")
     private Date updateAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
+    }
 }
