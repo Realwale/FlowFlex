@@ -2,6 +2,8 @@ package com.charistech.flowflex.backend.model.user;
 
 import com.charistech.flowflex.backend.common.BaseEntity;
 import com.charistech.flowflex.backend.constant.Role;
+import com.charistech.flowflex.backend.model.task.Task;
+import com.charistech.flowflex.backend.model.workflow.Workflow;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +34,12 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Workflow> createdWorkflows;
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTasks;
 
     private int failedLoginAttempts;
 
