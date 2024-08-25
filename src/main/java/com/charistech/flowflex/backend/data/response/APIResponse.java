@@ -1,10 +1,10 @@
 package com.charistech.flowflex.backend.data.response;
 
-import com.charistech.flowflex.backend.utils.DateUtil;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
+import static com.charistech.flowflex.backend.utils.FlowFlexUtils.saveDate;
 
 
 @Getter
@@ -23,7 +23,7 @@ public class APIResponse {
         this.isSuccessful = isSuccessful;
         this.statusCode = statusCode;
         this.responseMessage = responseMessage;
-        this.time = DateUtil.saveDate(LocalDateTime.now());
+        this.time = saveDate(LocalDateTime.now());
         this.payLoad = payLoad;
     }
 }

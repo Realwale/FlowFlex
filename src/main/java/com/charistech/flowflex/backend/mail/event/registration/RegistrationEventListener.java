@@ -5,7 +5,6 @@ import com.charistech.flowflex.backend.constant.EventType;
 import com.charistech.flowflex.backend.constant.MailConstants;
 import com.charistech.flowflex.backend.mail.common.OnApplicationEvent;
 import com.charistech.flowflex.backend.mail.common.SendEmail;
-import com.charistech.flowflex.backend.utils.EmailUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 
 import static com.charistech.flowflex.backend.constant.UrlConstants.BASE_URL;
+import static com.charistech.flowflex.backend.utils.FlowFlexUtils.frontEndAppUrl;
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
         String urlVariableName = "confirmationEmailUrl";
         String templateName = "accountConfirmationTemplate";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
+        String url = frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),
@@ -62,7 +62,7 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
         String urlVariableName = "inviteUserEmailUrl";
         String templateName = "inviteUserEmail";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/set-password?t=" +
+        String url = frontEndAppUrl(request) + BASE_URL+ "/account/registration/set-password?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),
@@ -76,7 +76,7 @@ public class RegistrationEventListener implements ApplicationListener<OnApplicat
         String urlVariableName = "newConfirmationEmailUrl";
         String templateName = "newConfirmationEmail";
         String recipientEmail = event.getUser().getEmail();
-        String url = EmailUtils.frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
+        String url = frontEndAppUrl(request) + BASE_URL+ "/account/registration/verify?t=" +
                 event.getToken()+"&email="+recipientEmail;
 
         sendEmail.send(recipientEmail, event.getUser().getFirstName(),

@@ -15,7 +15,6 @@ import com.charistech.flowflex.backend.model.user.AppUser;
 import com.charistech.flowflex.backend.repository.AppUserRepository;
 import com.charistech.flowflex.backend.repository.TokenRepository;
 import com.charistech.flowflex.backend.security.JwtService;
-import com.charistech.flowflex.backend.utils.EmailUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.charistech.flowflex.backend.utils.FlowFlexUtils.applicationUrl;
 
 @Service
 @RequiredArgsConstructor
@@ -137,7 +138,7 @@ public class AuthServiceImpl implements AuthService{
         if (confirmationToken.getExpiryDate().before(new Date())){
             tokenRepository.delete(confirmationToken);
             throw new InvalidArgumentException("Token is expired. Please request a new verification link at: "
-                    + EmailUtils.applicationUrl(request)+"/api/v1/account/new-verification-link?email="+user.getEmail());
+                    + applicationUrl(request)+"/api/v1/account/new-verification-link?email="+user.getEmail());
         }
         user.setVerified(true);
         userRepository.save(user);
@@ -163,7 +164,7 @@ public class AuthServiceImpl implements AuthService{
         if(tokenRepository.existsByUser(appUser)){
             tokenRepository.delete(tokenRepository.findByUser(appUser));
         }
-        eventPublisher.publishEvent(new OnApplicationEvent(appUser, EmailUtils.applicationUrl(request), EventType.Resend_Confirmation_Link));
+        eventPublisher.publishEvent(new OnApplicationEvent(appUser, applicationUrl(request), EventType.Resend_Confirmation_Link));
 
 
         return APIResponse.builder()

@@ -3,7 +3,8 @@ package com.charistech.flowflex.backend.utils;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.charistech.flowflex.backend.utils.UserUtils.EMAIL_REGEX;
+import static com.charistech.flowflex.backend.utils.FlowFlexUtils.EMAIL_REGEX;
+
 
 public class RequestValidator {
 

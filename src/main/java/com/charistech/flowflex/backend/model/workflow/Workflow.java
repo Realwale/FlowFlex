@@ -1,7 +1,6 @@
 package com.charistech.flowflex.backend.model.workflow;
 
 import com.charistech.flowflex.backend.common.BaseEntity;
-import com.charistech.flowflex.backend.constant.TaskStatus;
 import com.charistech.flowflex.backend.constant.WorkflowStatus;
 import com.charistech.flowflex.backend.model.task.Task;
 import com.charistech.flowflex.backend.model.user.AppUser;
